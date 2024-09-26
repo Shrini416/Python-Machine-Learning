@@ -1,0 +1,82 @@
+Importing the Dependencies
+
+import numpy as np
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score
+
+Data Collection and Data Processing
+
+#loading the dataset to pandas Dataframe
+sonar_data=pd.read_csv('Copy of sonar data.csv',header=None)
+
+sonar_data.head()
+
+#number of rows and columns
+sonar_data.shape
+
+sonar_data.describe()
+
+sonar_data[60].value_counts()
+
+sonar_data.groupby(60).mean()
+
+#Seperating Data and Labels(rock and mine are labels) this is supervised learning
+X=sonar_data.drop(columns=60,axis=1)
+Y=sonar_data[60]
+
+
+print(X)
+print(Y)
+
+
+Training and Test data
+
+X_train,X_test,Y_train,Y_test=train_test_split(X,Y, test_size=0.1, stratify=Y, random_state=1)
+
+print(X.shape, X_train.shape, X_test.shape)
+
+print(X_train)
+print(Y_train)
+
+Model training -----Logistic regression
+
+model= LogisticRegression()
+
+#training logistic regression model with training data
+model.fit(X_train, Y_train)
+
+Model Evaluation
+
+#Finding accuracy on training data
+X_train_prediction= model.predict(X_train)
+training_data_accuracy=accuracy_score(X_train_prediction,Y_train)
+
+print('Accuracy on training data is :',training_data_accuracy,)
+
+#Finding accuracy on test data
+X_test_prediction= model.predict(X_test)
+test_data_accuracy=accuracy_score(X_test_prediction,Y_test)
+
+print('Accuracy on test data is :',test_data_accuracy,)
+
+Making a Predictive System
+
+input_data=(0.0095, 0.0308, 0.0539, 0.0411, 0.0613, 0.1039, 0.1016, 0.1394, 0.2592, 0.3745, 0.4229, 0.4499, 0.5404, 0.4303, 0.3333, 0.3496, 0.3426, 0.2851, 0.4062, 0.6833, 0.765, 0.667, 0.5703, 0.5995, 0.6484, 0.8614, 0.9819, 0.938, 0.8435, 0.6074, 0.5403, 0.689, 0.5977, 0.3244, 0.0516, 0.3157, 0.359, 0.3881, 0.5716, 0.4314, 0.3051, 0.4393, 0.4302, 0.4831, 0.5084, 0.1952, 0.1539, 0.2037, 0.1054, 0.0251, 0.0357, 0.0181, 0.0019, 0.0102, 0.0133, 0.004, 0.0042, 0.003, 0.0031, 0.0033
+)
+#changing input data to numpy array
+input_data_as_numpy_array= np.asarray(input_data)
+
+#reshape the np array as we are predicting for one instance
+input_data_reshaped=input_data_as_numpy_array.reshape(1,-1)
+
+prediction= model.predict(input_data_reshaped)
+print(prediction)
+
+if(prediction[0]=='M'):
+  print('object is a Mine')
+else:
+  print('Object is Rock')
+
+
